@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"id\":\"d99d7222-66f8-4753-a8c1-797ca85a60f7\",\"slug\":\"create-checkout-session\",\"version\":5,\"name\":\"create-checkout-session\",\"status\":\"ACTIVE\",\"entrypoint_path\":\"file:///tmp/user_fn_uxlisdceefbxxobxlpaz_d99d7222-66f8-4753-a8c1-797ca85a60f7_5/source/index.ts\",\"import_map_path\":null,\"import_map\":false,\"verify_jwt\":false,\"created_at\":1777836198338,\"updated_at\":1777846211745,\"ezbr_sha256\":\"7172cc753987dc1241279aad801f2d69f0d0d6eba26dcf686432e7df842aed6d\"}"
+    }
+  ]
+}

@@ -1,0 +1,155 @@
+export interface SystemRecipe {
+  id: string;
+  name: string;
+  description: string;
+  prompt: string;
+  icon: string;
+  category: 'writing' | 'productivity' | 'summary' | 'analysis' | 'document';
+}
+
+export const SYSTEM_RECIPES: SystemRecipe[] = [
+  {
+    id: 'sys-notes',
+    name: 'Make notes longer',
+    description: 'Expand your quick notes into detailed meeting notes with context.',
+    prompt: 'You are an expert executive assistant. Take the provided meeting notes and transcript, and expand them into comprehensive, well-structured meeting minutes. Follow this strict format:\n1. Executive Summary: 2-3 sentences summarizing the core purpose and outcome.\n2. Detailed Discussion: Organize by topic, expanding brief notes with critical context from the transcript. Do not hallucinate details.\n3. Action Items: Clear tasks with owners and deadlines.\nMaintain a concise, professional, and objective tone.',
+    icon: '📝',
+    category: 'writing',
+  },
+  {
+    id: 'sys-email',
+    name: 'Write follow-up email',
+    description: 'Generate a professional follow-up email from the meeting.',
+    prompt: 'You are an expert communicator. Based on the provided meeting transcript and notes, draft a professional, concise follow-up email to the attendees.\nStructure:\n- Subject: Clear and descriptive.\n- Opening: Brief thanks for their time.\n- Summary: 2-3 bullet points of the main topics discussed.\n- Action Items: A bulleted list of next steps, highlighting owners.\n- Closing: Professional sign-off.\nKeep the tone polite, efficient, and direct.',
+    icon: '✉️',
+    category: 'writing',
+  },
+  {
+    id: 'sys-todos',
+    name: 'List my todos',
+    description: 'Extract all action items and to-dos from the meeting.',
+    prompt: 'Analyze the provided meeting transcript and notes to extract ALL action items, tasks, and commitments. Output ONLY a clean, markdown-formatted checklist.\nFormat each item as: "- [ ] **Task:** [Clear description] | **Owner:** [Name/Role] | **Deadline:** [If mentioned]".\nIgnore general statements and focus strictly on actionable commitments.',
+    icon: '✅',
+    category: 'productivity',
+  },
+  {
+    id: 'sys-recent-todos',
+    name: 'List recent todos',
+    description: 'Extracts and displays your outstanding to-dos from recent meeting notes.',
+    prompt: 'Review all recent meeting transcripts and extract any outstanding or unresolved action items, tasks, or commitments assigned to me. Output a clean, consolidated markdown checklist grouped by meeting or project.',
+    icon: '☑️',
+    category: 'productivity',
+  },
+  {
+    id: 'sys-flight-projects',
+    name: 'Show in flight projects',
+    description: 'Generates a status overview of in-flight initiatives from meeting notes.',
+    prompt: 'Analyze the provided meeting notes and generate a status overview of all in-flight projects, initiatives, or ongoing work streams. For each project, list: 1) Current Status, 2) Next Milestones, 3) Owners, and 4) Any identified blockers or risks.',
+    icon: '🚀',
+    category: 'analysis',
+  },
+  {
+    id: 'sys-outstanding-items',
+    name: 'List outstanding items',
+    description: 'Extracts all open action items, commitments, and deferred questions from meeting notes.',
+    prompt: 'Review the transcript and identify any open action items, questions that were deferred, unresolved issues, or commitments made. Output a clear, bulleted list of these outstanding items, noting who is responsible and any mentioned deadlines.',
+    icon: '⏳',
+    category: 'productivity',
+  },
+  {
+    id: 'sys-prep-next',
+    name: 'Prep next meeting',
+    description: 'Generates a pre-call cheat sheet for a meeting based on provided notes.',
+    prompt: 'Create a concise pre-call cheat sheet for the next meeting based on these notes. Include: 1) Key topics left unresolved, 2) Important context to remember from the last discussion, 3) Suggested agenda items, and 4) Action items that need follow-up.',
+    icon: '📅',
+    category: 'productivity',
+  },
+  {
+    id: 'sys-company-health',
+    name: 'Assess company health',
+    description: 'Turns meeting notes into an account brief covering customer overview, relationships, current state, future outlook.',
+    prompt: 'Turn these meeting notes into an account brief assessing company or customer health. Structure the output into: 1) Overview & Current State of the Business, 2) Key Relationships & Sentiment, 3) Wins & Positive Signals, and 4) Risks, Blockers, or Future Outlook.',
+    icon: '🏥',
+    category: 'analysis',
+  },
+  {
+    id: 'sys-summarize-folder',
+    name: 'Summarize this folder',
+    description: 'Summarizes a folder\'s contents, highlighting recurring themes, priorities, and feedback.',
+    prompt: 'Provide a comprehensive summary of all the information provided from these multiple meetings. Highlight recurring themes, top priorities across all discussions, and aggregate feedback. Output a structured executive summary that synthesizes the big picture.',
+    icon: '📁',
+    category: 'summary',
+  },
+  {
+    id: 'sys-tldr',
+    name: 'Write TLDR',
+    description: 'Create a brief summary of the entire meeting.',
+    prompt: 'Provide a highly concise TLDR of the meeting transcript and notes. Format your response into three short sections:\n- **Context:** Why did this meeting happen? (1 sentence)\n- **Key Takeaways:** 2-3 bullet points of the most critical information.\n- **Next Steps:** What happens next? (1 sentence)\nMaximize information density. Omit pleasantries, filler words, and minor tangents.',
+    icon: '📋',
+    category: 'summary',
+  },
+  {
+    id: 'sys-blind',
+    name: 'Blind spots',
+    description: 'Identify topics or risks that were missed in the meeting.',
+    prompt: 'You are a strategic advisor analyzing a meeting transcript. Your goal is to identify critical "blind spots" — risks, unvalidated assumptions, glossed-over concerns, or missing stakeholder perspectives.\nFor each blind spot, provide:\n1. **The Issue:** What was missed or assumed?\n2. **The Risk:** Why does this matter?\n3. **Mitigation:** One specific question or action to address it.\nBe objective, critical, and analytical.',
+    icon: '👁️',
+    category: 'analysis',
+  },
+  {
+    id: 'sys-help-decide',
+    name: 'Help me decide',
+    description: 'Applies decision-making frameworks to a stated problem and suggests resources.',
+    prompt: 'Act as a strategic decision-making advisor. Based on the options and trade-offs discussed in the transcript, create a comparison framework or pros/cons matrix to help the team reach a decision. State the core dilemma, evaluate the main options, and suggest what additional information might be needed to finalize the choice.',
+    icon: '⚖️',
+    category: 'analysis',
+  },
+  {
+    id: 'sys-streamline-calendar',
+    name: 'Streamline my calendar',
+    description: 'Suggests three things to improve your week based on meeting priorities.',
+    prompt: 'Analyze the meeting context and priorities to suggest specific ways to streamline my calendar and improve weekly efficiency. Identify potential meetings to cancel, delegate, or shorten, and recommend how to better allocate time based on the most critical goals discussed.',
+    icon: '🗓️',
+    category: 'productivity',
+  },
+  {
+    id: 'sys-weekly-recap',
+    name: 'Write weekly recap',
+    description: 'Generates a weekly recap of accomplishments for your team.',
+    prompt: 'Generate a professional and motivating weekly recap of accomplishments for the team based on the meeting notes. Structure it clearly with: 1) Major Wins & Shipped Items, 2) Work in Progress, 3) Key Decisions Made, and 4) Shoutouts/Recognitions for team members.',
+    icon: '🏆',
+    category: 'writing',
+  },
+  {
+    id: 'sys-prd',
+    name: 'Generate PRD',
+    description: 'Transform meeting discussion into a product requirements document.',
+    prompt: 'Act as a Senior Product Manager. Transform the provided meeting discussion into a structured Product Requirements Document (PRD) draft.\nInclude these sections:\n- **Problem Statement:** What user problem are we solving?\n- **Goals & Success Metrics:** How do we measure success?\n- **Key Features/Requirements:** Bulleted list of core functionality discussed.\n- **Out of Scope:** Explicitly mentioned exclusions.\n- **Open Questions:** Unresolved issues needing clarification.\nUse clear headings and bullet points. Do not invent requirements not mentioned.',
+    icon: '📄',
+    category: 'document',
+  },
+  {
+    id: 'sys-catchup',
+    name: 'Catch me up',
+    description: 'Quick briefing for someone who missed the meeting.',
+    prompt: 'Write a highly efficient "catch-up" briefing for an absent team member based on the transcript.\nAddress these points directly:\n- **The Big Picture:** What was the main topic and outcome?\n- **What You Missed:** 2-3 bullet points of crucial context.\n- **Impact on You:** Decisions or action items that specifically affect them (if any).\nKeep the tone conversational yet professional, optimizing for quick reading.',
+    icon: '🔄',
+    category: 'summary',
+  },
+  {
+    id: 'sys-decisions',
+    name: 'Key decisions',
+    description: 'Extract all decisions and their rationale from the meeting.',
+    prompt: 'Review the meeting transcript and extract EVERY definitive decision made. Ignore proposed ideas that weren\'t finalized.\nFormat each decision clearly:\n- **Decision:** [What was decided]\n- **Rationale:** [Why it was decided, based on the discussion]\n- **Stakeholders:** [Who made or agreed to it]\nPresent this as a clean, numbered list. Be precise and avoid summarizing general discussion.',
+    icon: '⚡',
+    category: 'analysis',
+  },
+  {
+    id: 'sys-list-decisions',
+    name: 'List key decisions',
+    description: 'Extracts key decisions from recent team notes to brief absent members.',
+    prompt: 'Review the recent team notes and transcript to extract ALL key decisions made. Focus on final outcomes rather than proposals. Provide a straightforward, bulleted list of decisions to easily brief any absent team members.',
+    icon: '🔑',
+    category: 'analysis',
+  }
+];

@@ -1,0 +1,8 @@
+{
+  "content": [
+    {
+      "type": "text",
+      "text": "{\"id\":\"712eb81a-6d3a-4b4b-a97f-22ee1a2c9a29\",\"slug\":\"dodopayments-webhook\",\"version\":1,\"name\":\"dodopayments-webhook\",\"status\":\"ACTIVE\",\"entrypoint_path\":\"file:///tmp/user_fn_uxlisdceefbxxobxlpaz_712eb81a-6d3a-4b4b-a97f-22ee1a2c9a29_1/source/index.ts\",\"import_map_path\":null,\"import_map\":false,\"verify_jwt\":false,\"created_at\":1777845584474,\"updated_at\":1777845584474,\"ezbr_sha256\":\"2f0ce88e2ac62fde79648fb34fb4e2eb50eed8efaf63190a8a26ade22bda1c4a\"}"
+    }
+  ]
+}
