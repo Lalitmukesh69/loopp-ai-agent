@@ -20,15 +20,6 @@ const GoogleIcon = () => (
   </svg>
 );
 
-const MicrosoftIcon = () => (
-  <svg width="18" height="18" viewBox="0 0 21 21" xmlns="http://www.w3.org/2000/svg">
-    <rect x="1" y="1" width="9" height="9" fill="#F25022"/>
-    <rect x="11" y="1" width="9" height="9" fill="#7FBA00"/>
-    <rect x="1" y="11" width="9" height="9" fill="#00A4EF"/>
-    <rect x="11" y="11" width="9" height="9" fill="#FFB900"/>
-  </svg>
-);
-
 // --- Loading Spinner ---
 const Spinner = () => (
   <svg className="animate-spin h-5 w-5 text-[#666666]" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
@@ -138,16 +129,7 @@ export default function LoginScreen() {
             </div>
           </div>
 
-          {/* Microsoft Button */}
-          <button className="w-full h-[52px] rounded-full border border-[#E5E5E5] flex items-center justify-center gap-3 text-[14.5px] font-semibold text-[#1A1A1A] hover:border-[#C2C2C2] hover:bg-[#FAFAFA] transition-all duration-200 active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-[#BAC66E] focus-visible:ring-offset-2">
-            <MicrosoftIcon />
-            Sign in with Microsoft
-          </button>
 
-          {/* SSO Button */}
-          <button className="w-full h-[52px] rounded-full border border-[#E5E5E5] flex items-center justify-center gap-3 text-[14.5px] font-semibold text-[#1A1A1A] hover:border-[#C2C2C2] hover:bg-[#FAFAFA] transition-all duration-200 active:scale-[0.98] outline-none focus-visible:ring-2 focus-visible:ring-[#BAC66E] focus-visible:ring-offset-2">
-            Sign in with SSO
-          </button>
 
         </div>
 

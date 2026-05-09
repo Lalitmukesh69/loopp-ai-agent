@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import ChatNavbar from './chat/ChatNavbar';
+import React from 'react';
+import Navbar from './common/Navbar';
 import ChatHero from './chat/ChatHero';
 import AskAwaySection from './chat/Ask Away Section';
 import ChatFeatures from './chat/ChatFeatures';
@@ -11,15 +11,6 @@ import CTASection from './common/CTASection';
 import Footer from './common/Footer';
 
 export default function LoopChat() {
-  const [scrolled, setScrolled] = useState(false);
-
-  useEffect(() => {
-    const onScroll = () => setScrolled(window.scrollY > 80);
-    window.addEventListener('scroll', onScroll, { passive: true });
-    onScroll();
-    return () => window.removeEventListener('scroll', onScroll);
-  }, []);
-
   return (
     <>
       <style>{`
@@ -209,7 +200,7 @@ export default function LoopChat() {
       `}</style>
 
       <div className="bg-white text-[#1a1c1b] font-body selection:bg-primary-container selection:text-on-primary-container overflow-x-hidden">
-        <ChatNavbar scrolled={scrolled} />
+        <Navbar />
         
         <main>
           <ChatHero />

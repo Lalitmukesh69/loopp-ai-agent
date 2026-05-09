@@ -1,4 +1,5 @@
 import React from 'react';
+import { MARKETING_COLORS } from '../../data/marketingTheme';
 
 export const LandingStyles: React.FC = () => (
   <style>{`
@@ -7,13 +8,13 @@ export const LandingStyles: React.FC = () => (
     
     .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
     .text-balance { text-wrap: balance; }
-    .bg-dots { background-image: radial-gradient(#4b6319 0.5px, transparent 0.5px); background-size: 14px 14px; }
+    .bg-dots { background-image: radial-gradient(${MARKETING_COLORS.primary} 0.5px, transparent 0.5px); background-size: 14px 14px; }
     .newsreader-italic { font-family: 'Raleway', sans-serif; font-style: italic; }
     .loop-watermark {
         font-family: 'Raleway', sans-serif;
         font-weight: 800;
         font-size: 20rem;
-        color: #f1f1ef;
+        color: ${MARKETING_COLORS.surfaceContainerLow};
         letter-spacing: -0.05em;
         pointer-events: none;
     }

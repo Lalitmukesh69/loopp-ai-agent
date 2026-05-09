@@ -1,4 +1,5 @@
 import React from 'react';
+import { MARKETING_COLORS } from '../../data/marketingTheme';
 
 /**
  * Global styles used across the pricing page.
@@ -12,7 +13,7 @@ export default function PricingStyles() {
       .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
       .newsreader-italic { font-family: 'Raleway', sans-serif; font-style: italic; }
       .loop-serif { font-family: 'Raleway', sans-serif; letter-spacing: -0.01em; }
-      .loop-watermark { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 20rem; color: #f1f1ef; letter-spacing: -0.05em; pointer-events: none; }
+      .loop-watermark { font-family: 'Raleway', sans-serif; font-weight: 800; font-size: 20rem; color: ${MARKETING_COLORS.surfaceContainerLow}; letter-spacing: -0.05em; pointer-events: none; }
       .tweet-card { break-inside: avoid; margin-bottom: 16px; background: #fff; border: 1px solid #e5e5e5; border-radius: 16px; padding: 20px; transition: box-shadow 0.2s ease, border-color 0.2s ease; cursor: default; }
       .tweet-card:hover { box-shadow: 0 4px 20px rgba(0,0,0,0.06); border-color: #d0d0d0; }
       .tweet-avatar { width: 44px; height: 44px; border-radius: 50%; background: #e8e8e8; flex-shrink: 0; overflow: hidden; }
