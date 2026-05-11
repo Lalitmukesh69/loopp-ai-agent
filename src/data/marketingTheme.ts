@@ -23,7 +23,7 @@ export const MARKETING_COLORS = {
   /** Contrast color for text/icons inside primaryContainer */
   onPrimaryContainer: "#c1de86",
 
-  /** Secondary brand color (more subtle th`an primary) */
+  /** Secondary brand color (more subtle than primary) */
   secondary: "#576341",
   /** Contrast color for text/icons on top of secondary color */
   onSecondary: "#ffffff",
