@@ -29,6 +29,8 @@ export function useStreamingTranscription(): UseStreamingTranscriptionReturn {
 
   const mediaRecorderRef = useRef<MediaRecorder | null>(null);
   const streamRef = useRef<MediaStream | null>(null);
+  const displayStreamRef = useRef<MediaStream | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
   const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
   const analyserRef = useRef<AnalyserNode | null>(null);
   const animFrameRef = useRef<number | null>(null);
@@ -97,16 +99,41 @@ export function useStreamingTranscription(): UseStreamingTranscriptionReturn {
 
   const startRecording = useCallback(async (existingLoopId?: string) => {
     try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      streamRef.current = stream;
+      // 1. Get microphone stream
+      const micStream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = micStream;
 
-      // Set up audio analysis for visualizer
-      const audioCtx = new AudioContext();
-      const source = audioCtx.createMediaStreamSource(stream);
-      const analyser = audioCtx.createAnalyser();
-      analyser.fftSize = 64;
-      source.connect(analyser);
-      analyserRef.current = analyser;
+      // 2. Get display media (tab) stream
+      let displayStream: MediaStream | null = null;
+      try {
+        displayStream = await navigator.mediaDevices.getDisplayMedia({
+          video: true, // Video is required by most browsers to show the picker
+          audio: true
+        });
+        displayStreamRef.current = displayStream;
+      } catch (err) {
+        console.warn('Could not get display media. Falling back to mic only.', err);
+      }
+
+      // 3. Set up AudioContext to mix both streams
+      audioContextRef.current = new AudioContext();
+      const destination = audioContextRef.current.createMediaStreamDestination();
+
+      // Connect microphone to destination
+      const micSource = audioContextRef.current.createMediaStreamSource(micStream);
+      micSource.connect(destination);
+
+      // Connect tab audio to destination (if selected)
+      if (displayStream && displayStream.getAudioTracks().length > 0) {
+        const displaySource = audioContextRef.current.createMediaStreamSource(displayStream);
+        displaySource.connect(destination);
+      }
+
+      // Set up audio analysis on the combined stream
+      analyserRef.current = audioContextRef.current.createAnalyser();
+      analyserRef.current.fftSize = 64;
+      const combinedSource = audioContextRef.current.createMediaStreamSource(destination.stream);
+      combinedSource.connect(analyserRef.current);
       updateAudioLevels();
 
       // Create or use existing loop
@@ -135,8 +162,8 @@ export function useStreamingTranscription(): UseStreamingTranscriptionReturn {
       startTimeRef.current = Date.now();
       allChunksRef.current = [];
 
-      // Start MediaRecorder with timeslice for chunked recording
-      const recorder = new MediaRecorder(stream, { mimeType: 'audio/webm' });
+      // Start MediaRecorder with timeslice for chunked recording using the mixed destination stream
+      const recorder = new MediaRecorder(destination.stream, { mimeType: 'audio/webm' });
       mediaRecorderRef.current = recorder;
 
       recorder.ondataavailable = (e) => {
@@ -191,6 +218,16 @@ export function useStreamingTranscription(): UseStreamingTranscriptionReturn {
       streamRef.current = null;
     }
 
+    if (displayStreamRef.current) {
+      displayStreamRef.current.getTracks().forEach(t => t.stop());
+      displayStreamRef.current = null;
+    }
+
+    if (audioContextRef.current) {
+      audioContextRef.current.close();
+      audioContextRef.current = null;
+    }
+
     // Stop recorder
     if (mediaRecorderRef.current && mediaRecorderRef.current.state !== 'inactive') {
       mediaRecorderRef.current.stop();
@@ -240,6 +277,8 @@ export function useStreamingTranscription(): UseStreamingTranscriptionReturn {
       if (timerRef.current) clearInterval(timerRef.current);
       if (animFrameRef.current) cancelAnimationFrame(animFrameRef.current);
       if (streamRef.current) streamRef.current.getTracks().forEach(t => t.stop());
+      if (displayStreamRef.current) displayStreamRef.current.getTracks().forEach(t => t.stop());
+      if (audioContextRef.current) audioContextRef.current.close();
     };
   }, []);
 

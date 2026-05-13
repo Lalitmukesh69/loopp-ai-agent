@@ -144,6 +144,7 @@ export const useVoiceRecording = (options?: UseVoiceRecordingOptions) => {
     // Stop all media tracks immediately
     if (mediaRecorderRef.current) {
       mediaRecorderRef.current.stream.getTracks().forEach(track => track.stop());
+      mediaRecorderRef.current = null;
     }
     if (micStreamRef.current) {
       micStreamRef.current.getTracks().forEach(track => track.stop());
@@ -296,14 +297,9 @@ export const useVoiceRecording = (options?: UseVoiceRecordingOptions) => {
   // Cleanup on unmount
   useEffect(() => {
     return () => {
-      if (animationFrameRef.current) {
-        cancelAnimationFrame(animationFrameRef.current);
-      }
-      if (audioContextRef.current) {
-        audioContextRef.current.close();
-      }
+      stopMicrophone();
     };
-  }, []);
+  }, [stopMicrophone]);
 
   return {
     isRecording,

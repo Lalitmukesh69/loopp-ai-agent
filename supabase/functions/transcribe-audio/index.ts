@@ -1,6 +1,19 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { encode as encodeBase64 } from "https://deno.land/std@0.168.0/encoding/base64.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+
+// Helper to efficiently convert ArrayBuffer to Base64 without exceeding memory limits
+// The standard Deno base64 encoder concatenates strings byte-by-byte which causes
+// V8 to run out of memory (exceed 256MB) for audio files larger than a few MBs.
+function arrayBufferToBase64(buffer: ArrayBuffer): string {
+  const bytes = new Uint8Array(buffer);
+  let binary = "";
+  const chunkSize = 32768; // 32KB chunks to avoid call stack limits
+  for (let i = 0; i < bytes.length; i += chunkSize) {
+    const chunk = bytes.subarray(i, i + chunkSize);
+    binary += String.fromCharCode.apply(null, Array.from(chunk));
+  }
+  return btoa(binary);
+}
 
 const corsHeaders = {
   "Access-Control-Allow-Origin": "*",
@@ -10,7 +23,7 @@ const corsHeaders = {
 // CONFIGURATION
 // If "google/gemini-2.5-flash" fails, switch this to "google/gemini-2.0-flash-exp"
 // Gemini 2.0 Flash is specifically optimized for real-time audio.
-const MODEL_NAME = "google/gemini-2.0-flash-exp"; 
+const MODEL_NAME = "google/gemini-2.5-flash"; 
 
 serve(async (req) => {
   // 1. Handle CORS
@@ -56,9 +69,9 @@ serve(async (req) => {
     if (!audioFile) throw new Error("No audio file provided");
 
     // 3. Prepare Audio for Gemini
-    // We use standard Base64 encoding. 
+    // We use standard Base64 encoding with a memory-efficient chunked approach. 
     const arrayBuffer = await audioFile.arrayBuffer();
-    const base64Audio = encodeBase64(arrayBuffer);
+    const base64Audio = arrayBufferToBase64(arrayBuffer);
     const mimeType = audioFile.type || "audio/webm";
 
     console.log(`Transcribing ${audioFile.size} bytes using ${MODEL_NAME}...`);
@@ -76,7 +89,7 @@ serve(async (req) => {
           {
             role: "system",
             // SYSTEM PROMPT: Strictly enforces Speech-to-Text behavior
-            content: "You are a professional transcriber. Your task is to output the exact text from the audio. Do not add timestamps, do not add speaker labels, and do not add conversational fillers. Output ONLY the text."
+            content: "You are a professional transcriber. Your task is to output the exact text from the audio. Do not add timestamps, do not add speaker labels, and do not add conversational fillers. Output ONLY the text. CRITICAL INSTRUCTION: If the audio is completely silent, contains only white noise, or has no discernible speech, you MUST output exactly the word [SILENCE] and nothing else. Do not hallucinate advertisements, programs, or random text."
           },
           {
             role: "user",
@@ -118,7 +131,19 @@ serve(async (req) => {
     }
 
     const result = await response.json();
-    const transcription = result.choices?.[0]?.message?.content?.trim() || "";
+    let transcription = result.choices?.[0]?.message?.content?.trim() || "";
+
+    // 5.5 Handle Silence and Known Hallucinations
+    const lowerTranscript = transcription.toLowerCase();
+    if (
+      transcription === "[SILENCE]" ||
+      lowerTranscript.includes("paid advertisement for") ||
+      lowerTranscript.includes("pro vibe") ||
+      lowerTranscript.includes("united states air force")
+    ) {
+      console.log("Filtered out silence or known hallucination.");
+      transcription = "";
+    }
 
     console.log("Transcription result:", transcription.substring(0, 200));
 
